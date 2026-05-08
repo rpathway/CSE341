@@ -1,0 +1,16 @@
+{
+  "name": "week01-frontend-server",
+  "version": "1.0.0",
+  "description": "The backend API for the frontend week01 team activity",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "mongodb": "^7.2.0"
+  }
+}
