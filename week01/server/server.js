@@ -51,7 +51,7 @@ app.use((req, res) => {
 ////////////////////////////////////////
 // Server
 ////////////////////////////////////////
-http.createServer(app).listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`HTTP server running on http://localhost:${PORT}`);
 });
 
