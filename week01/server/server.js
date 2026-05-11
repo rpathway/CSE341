@@ -18,7 +18,8 @@ import express from 'express';
 
 import { fileURLToPath } from 'url';
 
-import professionalRoute from './routes/professional.js';
+import endpointRoutes from './routes/endpoints.js';
+import dbHandler from './data/database.js';
 
 
 
@@ -42,7 +43,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 ////////////////////////////////////////
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/professional', professionalRoute);
+app.use('/Contacts', endpointRoutes);
 app.use((req, res) => {
   res.status(404).json({ error: 'Not Found' });
 });
@@ -51,9 +52,15 @@ app.use((req, res) => {
 ////////////////////////////////////////
 // Server
 ////////////////////////////////////////
-app.listen(PORT, () => {
-  console.log(`HTTP server running on http://localhost:${PORT}`);
-});
+dbHandler.init((err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    app.listen(PORT, () => {
+      console.log(`HTTP server running on http://localhost:${PORT}`);
+    });
+  }
+}) 
 
 
 process.on('SIGINT', () => {
