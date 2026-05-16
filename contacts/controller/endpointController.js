@@ -22,9 +22,8 @@ endpointFunctions.getData = async function (req, res, next) {
 
 endpointFunctions.getDataById = async function (req, res, next) {
   const mongoId = new ObjectId(req.params.id);
-
   try {
-    const data = await mongoDB.getDatabase().db('cse341').collection('Contacts').findOne({ _id: String(mongoId) });
+    const data = await mongoDB.getDatabase().db('cse341').collection('Contacts').findOne({ _id: mongoId });
     if (data) {
       res.setHeader('Content-Type', 'application/json')
       res.status(200).json(data);
@@ -38,7 +37,6 @@ endpointFunctions.getDataById = async function (req, res, next) {
 }
 
 endpointFunctions.createUser = async function (req, res) {
-  console.log(req.body)
   const user = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
