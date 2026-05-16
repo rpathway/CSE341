@@ -1,0 +1,32 @@
+### Get all contacts
+GET https://cse341-5avf.onrender.com/Contacts
+
+### Get contact by ID
+GET https://cse341-5avf.onrender.com/Contacts/6a023bb1209afa98c2db8b32
+
+### Create contact
+POST https://cse341-5avf.onrender.com/Contacts HTTP/1.1
+Content-Type: application/json
+
+{
+  "firstName": "Ashley",
+  "lastName": "Weaver",
+  "email": "aWeaver@test.com",
+  "favoriteColor": "Brown",
+  "birthday": "06/19/2000"
+}
+
+### PUT contact
+PUT https://cse341-5avf.onrender.com/Contacts/6a075ea454573d845ac72447 HTTP/1.1
+Content-Type: application/json
+
+{
+  "firstName": "Sarah",
+  "lastName": "Weaver",
+  "email": "sWeaver@gmail.com",
+  "favoriteColor": "Green",
+  "birthday": "12/12/20"
+}
+
+### Delete contact
+DELETE https://cse341-5avf.onrender.com/Contacts/6a075ea454573d845ac72447

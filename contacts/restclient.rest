@@ -1,0 +1,3 @@
+GET https://cse341-5avf.onrender.com/Contacts
+###
+GET https://cse341-5avf.onrender.com/Contacts/6a023bb1209afa98c2db8b32
