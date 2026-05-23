@@ -1,0 +1,217 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Expense Tracker API",
+    "description": "REST API for tracking personal expenses and budgeting.",
+    "version": "1.0.0"
+  },
+  "host": "cse341-5avf.onrender.com",
+  "basePath": "/",
+  "schemes": ["https"],
+  "tags": [
+    { "name": "Expenses", "description": "Expense management endpoints" },
+    { "name": "Budgets",  "description": "Budget management endpoints" }
+  ],
+  "paths": {
+    "/expenses": {
+      "get": {
+        "tags": ["Expenses"],
+        "summary": "Get all expenses",
+        "description": "Returns all expenses. Filter by category, status, or paymentMethod.",
+        "parameters": [
+          { "name": "category",      "in": "query", "type": "string", "description": "food, transport, housing, entertainment, health, shopping, utilities, other" },
+          { "name": "status",        "in": "query", "type": "string", "description": "pending, cleared, cancelled" },
+          { "name": "paymentMethod", "in": "query", "type": "string", "description": "cash, credit_card, debit_card, bank_transfer, other" }
+        ],
+        "responses": {
+          "200": { "description": "List of expenses" },
+          "500": { "description": "Internal Server Error" }
+        }
+      },
+      "post": {
+        "tags": ["Expenses"],
+        "summary": "Create a new expense",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": ["amount", "description", "category", "date", "paymentMethod"],
+              "properties": {
+                "amount":        { "type": "number",  "example": 42.50 },
+                "description":   { "type": "string",  "example": "Grocery run" },
+                "category":      { "type": "string",  "example": "food" },
+                "date":          { "type": "string",  "example": "2024-05-01" },
+                "paymentMethod": { "type": "string",  "example": "credit_card" },
+                "merchant":      { "type": "string",  "example": "Loblaws" },
+                "currency":      { "type": "string",  "example": "CAD" },
+                "status":        { "type": "string",  "example": "cleared" },
+                "receiptUrl":    { "type": "string",  "example": "https://example.com/receipt.pdf" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "Expense created" },
+          "400": { "description": "Validation error" },
+          "500": { "description": "Internal Server Error" }
+        }
+      }
+    },
+    "/expenses/{id}": {
+      "get": {
+        "tags": ["Expenses"],
+        "summary": "Get a single expense by ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string", "example": "664f1b2c9e1a2b3c4d5e6f7a" }
+        ],
+        "responses": {
+          "200": { "description": "Expense found" },
+          "400": { "description": "Invalid ID format" },
+          "404": { "description": "Expense not found" },
+          "500": { "description": "Internal Server Error" }
+        }
+      },
+      "put": {
+        "tags": ["Expenses"],
+        "summary": "Update an existing expense",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "amount":        { "type": "number",  "example": 55.00 },
+                "description":   { "type": "string",  "example": "Updated grocery run" },
+                "category":      { "type": "string",  "example": "food" },
+                "date":          { "type": "string",  "example": "2024-05-02" },
+                "paymentMethod": { "type": "string",  "example": "debit_card" },
+                "merchant":      { "type": "string",  "example": "Costco" },
+                "currency":      { "type": "string",  "example": "CAD" },
+                "status":        { "type": "string",  "example": "cleared" },
+                "receiptUrl":    { "type": "string",  "example": "" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Expense updated" },
+          "400": { "description": "Validation error or invalid ID" },
+          "404": { "description": "Expense not found" },
+          "500": { "description": "Internal Server Error" }
+        }
+      },
+      "delete": {
+        "tags": ["Expenses"],
+        "summary": "Delete an expense by ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "Expense deleted" },
+          "400": { "description": "Invalid ID format" },
+          "404": { "description": "Expense not found" },
+          "500": { "description": "Internal Server Error" }
+        }
+      }
+    },
+    "/budgets": {
+      "get": {
+        "tags": ["Budgets"],
+        "summary": "Get all budgets",
+        "responses": {
+          "200": { "description": "List of budgets" },
+          "500": { "description": "Internal Server Error" }
+        }
+      },
+      "post": {
+        "tags": ["Budgets"],
+        "summary": "Create a new budget",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": ["name", "category", "limit", "period"],
+              "properties": {
+                "name":     { "type": "string", "example": "Monthly Groceries" },
+                "category": { "type": "string", "example": "food" },
+                "limit":    { "type": "number", "example": 500 },
+                "period":   { "type": "string", "example": "monthly" },
+                "notes":    { "type": "string", "example": "Includes household items" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "Budget created" },
+          "400": { "description": "Validation error" },
+          "500": { "description": "Internal Server Error" }
+        }
+      }
+    },
+    "/budgets/{id}": {
+      "get": {
+        "tags": ["Budgets"],
+        "summary": "Get a single budget by ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "Budget found" },
+          "400": { "description": "Invalid ID format" },
+          "404": { "description": "Budget not found" },
+          "500": { "description": "Internal Server Error" }
+        }
+      },
+      "put": {
+        "tags": ["Budgets"],
+        "summary": "Update an existing budget",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name":     { "type": "string", "example": "Updated Groceries" },
+                "category": { "type": "string", "example": "food" },
+                "limit":    { "type": "number", "example": 650 },
+                "period":   { "type": "string", "example": "monthly" },
+                "notes":    { "type": "string", "example": "Updated notes" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Budget updated" },
+          "400": { "description": "Validation error or invalid ID" },
+          "404": { "description": "Budget not found" },
+          "500": { "description": "Internal Server Error" }
+        }
+      },
+      "delete": {
+        "tags": ["Budgets"],
+        "summary": "Delete a budget by ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "Budget deleted" },
+          "400": { "description": "Invalid ID format" },
+          "404": { "description": "Budget not found" },
+          "500": { "description": "Internal Server Error" }
+        }
+      }
+    }
+  }
+}
