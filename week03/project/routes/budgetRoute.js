@@ -1,6 +1,7 @@
 // #swagger.basePath = '/budgets'
 import express from 'express';
 import budgetController from '../controllers/budgetController.js';
+import authController from '../controllers/authenticate.js';
 
 
 const router = express.Router();
@@ -9,11 +10,13 @@ const router = express.Router();
 router.get('/',
   // #swagger.tags = ['Budgets']
   // #swagger.summary = 'Get all budgets'
+  authController.isAuthenticated,
   budgetController.getAllBudgets
 );
 router.get('/:id',
   // #swagger.tags = ['Budgets']
   // #swagger.summary = 'Get a single budget by ID'
+  authController.isAuthenticated,
   budgetController.getBudgetById
 );
 router.post('/',
@@ -37,16 +40,19 @@ router.post('/',
         }
       }
    */
+  authController.isAuthenticated,
   budgetController.createBudget
 );
 router.put('/:id',
   // #swagger.tags = ['Budgets']
   // #swagger.summary = 'Update an existing budget'
+  authController.isAuthenticated,
   budgetController.updateBudget
 );
 router.delete('/:id',
   // #swagger.tags = ['Budgets']
   // #swagger.summary = 'Delete a budget by ID'
+  authController.isAuthenticated,
   budgetController.deleteBudget
 );
 

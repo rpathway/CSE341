@@ -1,7 +1,7 @@
 // #swagger.basePath = '/expenses'
 import express from 'express';
 import expenseController from '../controllers/expenseController.js';
-
+import authController from '../controllers/authenticate.js';
 
 const router = express.Router();
 
@@ -10,11 +10,13 @@ router.get('/',
   // #swagger.tags = ['Expenses']
   // #swagger.summary = 'Get all expenses'
   // #swagger.description = 'Returns all expenses. Filter by category, status, or paymentMethod.'
+  authController.isAuthenticated,
   expenseController.getAllExpenses
 );
 router.get('/:id',
   // #swagger.tags = ['Expenses']
   // #swagger.summary = 'Get a single expense by ID'
+  authController.isAuthenticated,
   expenseController.getExpenseById
 );
 router.post('/',
@@ -43,16 +45,19 @@ router.post('/',
         }
       }
   */
+  authController.isAuthenticated,
   expenseController.createExpense
 );
 router.put('/:id',
   // #swagger.tags = ['Expenses']
   // #swagger.summary = 'Update an existing expense'
+  authController.isAuthenticated,
   expenseController.updateExpense
 );
 router.delete('/:id',
   // #swagger.tags = ['Expenses']
   // #swagger.summary = 'Delete an expense by ID'
+  authController.isAuthenticated,
   expenseController.deleteExpense
 );
 

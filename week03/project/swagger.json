@@ -10,12 +10,22 @@
   "schemes": ["https"],
   "tags": [
     { "name": "Expenses", "description": "Expense management endpoints" },
-    { "name": "Budgets",  "description": "Budget management endpoints" }
+    { "name": "Budgets",  "description": "Budget management endpoints" },
+    { "name": "Auth",     "description": "IAM endpoints" }
   ],
+  "securityDefinitions": {
+    "loginRequired": {
+      "type": "apiKey",
+      "in": "cookie",
+      "name": "connect.sid",
+      "description": "Session cookie set after login"
+    }
+  },
   "paths": {
     "/expenses": {
       "get": {
         "tags": ["Expenses"],
+        "security": [{ "loginRequired": [] }],
         "summary": "Get all expenses",
         "description": "Returns all expenses. Filter by category, status, or paymentMethod.",
         "parameters": [
@@ -25,11 +35,13 @@
         ],
         "responses": {
           "200": { "description": "List of expenses" },
+          "401": { "description": "Not Authenticated" },
           "500": { "description": "Internal Server Error" }
         }
       },
       "post": {
         "tags": ["Expenses"],
+        "security": [{ "loginRequired": [] }],
         "summary": "Create a new expense",
         "parameters": [
           {
@@ -56,6 +68,7 @@
         "responses": {
           "201": { "description": "Expense created" },
           "400": { "description": "Validation error" },
+          "401": { "description": "Not Authenticated" },
           "500": { "description": "Internal Server Error" }
         }
       }
@@ -63,6 +76,7 @@
     "/expenses/{id}": {
       "get": {
         "tags": ["Expenses"],
+        "security": [{ "loginRequired": [] }],
         "summary": "Get a single expense by ID",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string", "example": "664f1b2c9e1a2b3c4d5e6f7a" }
@@ -70,12 +84,14 @@
         "responses": {
           "200": { "description": "Expense found" },
           "400": { "description": "Invalid ID format" },
+          "401": { "description": "Not Authenticated" },
           "404": { "description": "Expense not found" },
           "500": { "description": "Internal Server Error" }
         }
       },
       "put": {
         "tags": ["Expenses"],
+        "security": [{ "loginRequired": [] }],
         "summary": "Update an existing expense",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" },
@@ -102,12 +118,14 @@
         "responses": {
           "200": { "description": "Expense updated" },
           "400": { "description": "Validation error or invalid ID" },
+          "401": { "description": "Not Authenticated" },
           "404": { "description": "Expense not found" },
           "500": { "description": "Internal Server Error" }
         }
       },
       "delete": {
         "tags": ["Expenses"],
+        "security": [{ "loginRequired": [] }],
         "summary": "Delete an expense by ID",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" }
@@ -115,6 +133,7 @@
         "responses": {
           "200": { "description": "Expense deleted" },
           "400": { "description": "Invalid ID format" },
+          "401": { "description": "Not Authenticated" },
           "404": { "description": "Expense not found" },
           "500": { "description": "Internal Server Error" }
         }
@@ -123,14 +142,17 @@
     "/budgets": {
       "get": {
         "tags": ["Budgets"],
+        "security": [{ "loginRequired": [] }],
         "summary": "Get all budgets",
         "responses": {
           "200": { "description": "List of budgets" },
+          "401": { "description": "Not Authenticated" },
           "500": { "description": "Internal Server Error" }
         }
       },
       "post": {
         "tags": ["Budgets"],
+        "security": [{ "loginRequired": [] }],
         "summary": "Create a new budget",
         "parameters": [
           {
@@ -153,6 +175,7 @@
         "responses": {
           "201": { "description": "Budget created" },
           "400": { "description": "Validation error" },
+          "401": { "description": "Not Authenticated" },
           "500": { "description": "Internal Server Error" }
         }
       }
@@ -160,6 +183,7 @@
     "/budgets/{id}": {
       "get": {
         "tags": ["Budgets"],
+        "security": [{ "loginRequired": [] }],
         "summary": "Get a single budget by ID",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" }
@@ -167,12 +191,14 @@
         "responses": {
           "200": { "description": "Budget found" },
           "400": { "description": "Invalid ID format" },
+          "401": { "description": "Not Authenticated" },
           "404": { "description": "Budget not found" },
           "500": { "description": "Internal Server Error" }
         }
       },
       "put": {
         "tags": ["Budgets"],
+        "security": [{ "loginRequired": [] }],
         "summary": "Update an existing budget",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" },
@@ -195,12 +221,14 @@
         "responses": {
           "200": { "description": "Budget updated" },
           "400": { "description": "Validation error or invalid ID" },
+          "401": { "description": "Not Authenticated" },
           "404": { "description": "Budget not found" },
           "500": { "description": "Internal Server Error" }
         }
       },
       "delete": {
         "tags": ["Budgets"],
+        "security": [{ "loginRequired": [] }],
         "summary": "Delete a budget by ID",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" }
@@ -208,8 +236,92 @@
         "responses": {
           "200": { "description": "Budget deleted" },
           "400": { "description": "Invalid ID format" },
+          "401": { "description": "Not Authenticated" },
           "404": { "description": "Budget not found" },
           "500": { "description": "Internal Server Error" }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register a user",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": ["username", "email", "password"],
+              "properties": {
+                "username": { "type": "string", "example": "johnsmith" },
+                "email":    { "type": "string", "example": "john@lorem.com" },
+                "password": { "type": "string", "example": "hunter2" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "User created successfully" },
+          "400": { "description": "Validation error or email already in use" },
+          "500": { "description": "Internal Server Error" }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Log in with email and password",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": ["email", "password"],
+              "properties": {
+                "email":    { "type": "string", "example": "john@lorem.com" },
+                "password": { "type": "string", "example": "hunter2" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Logged in successfully" },
+          "400": { "description": "Missing email or password" },
+          "401": { "description": "Invalid credentials" },
+          "500": { "description": "Internal Server Error" }
+        }
+      }
+    },
+    "/login/github": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Log in with GitHub OAuth",
+        "description": "Redirects to GitHub for authentication",
+        "responses": {
+          "302": { "description": "Redirect to GitHub" }
+        }
+      }
+    },
+    "/github/callback": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "GitHub OAuth callback",
+        "description": "GitHub redirects here after authentication",
+        "responses": {
+          "302": { "description": "Redirect to home on success" }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Log out",
+        "responses": {
+          "302": { "description": "Redirect to home after logout" }
         }
       }
     }
